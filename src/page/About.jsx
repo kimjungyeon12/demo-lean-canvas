@@ -1,19 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import Button from '../components/Button';
-import { canvases } from '../api/http';
 
 
 function About() {
   const queryClient = useQueryClient();
   const { isLoading, error, data } = useQuery({
     queryKey: ['canvases'],
-    queryFn: () => canvases.get('/').then(res => res.data),
+    queryFn: () =>
+      axios.get('http://localhost:8000/canvases/').then(res => res.data),
     initialData: [],
   });
 
   const { mutate: createNewCanvas, isLoading: isLoadingCreate } = useMutation({
-    mutationFn: (newCanvas) => canvases.post('/', newCanvas),
+    mutationFn: (newCanvas) => axios.post('http://localhost:8000/canvases/', newCanvas),
     onSuccess: () => {
       queryClient.invalidateQueries(['canvases']);
     },
